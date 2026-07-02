@@ -1215,20 +1215,27 @@ if menu == "📊 Dados do Solo":
             with st.spinner("💾 Salvando e processando dados..."):
                 time.sleep(0.5)
                 try:
+                    # Função para converter string com vírgula para float
+                    def converter_float(valor):
+                        if isinstance(valor, str):
+                            # Remove espaços e substitui vírgula por ponto
+                            valor = valor.strip().replace(',', '.')
+                        return float(valor)
+                    
                     dados = {
-                        "nitrogen": float(nitrogen),
-                        "phosphorus": float(phosphorus),
-                        "potassium": float(potassium),
-                        "ph": float(ph),
-                        "aluminum": float(aluminum),
-                        "calcium": float(calcium),
-                        "magnesium": float(magnesium),
-                        "h_al": float(h_al),
-                        "organic_matter": float(organic_matter) if organic_matter else 25.0,
+                        "nitrogen": converter_float(nitrogen),
+                        "phosphorus": converter_float(phosphorus),
+                        "potassium": converter_float(potassium),
+                        "ph": converter_float(ph),
+                        "aluminum": converter_float(aluminum),
+                        "calcium": converter_float(calcium),
+                        "magnesium": converter_float(magnesium),
+                        "h_al": converter_float(h_al),
+                        "organic_matter": converter_float(organic_matter) if organic_matter else 25.0,
                         "sand": sand,
                         "silt": silt,
                         "clay": clay,
-                        "materia_organica": float(organic_matter) if organic_matter else 25.0
+                        "materia_organica": converter_float(organic_matter) if organic_matter else 25.0
                     }
                     
                     sb = calcular_sb(dados["calcium"], dados["magnesium"], dados["potassium"])
@@ -1257,10 +1264,9 @@ if menu == "📊 Dados do Solo":
                         st.metric("m% (Alumínio)", f"{m:.1f}%")
 
                 except ValueError as ve:
-                    st.error(f"❌ Erro: Verifique se todos os valores são números válidos! Detalhes: {ve}")
+                    st.error(f"❌ Erro: Verifique se todos os valores são números válidos (use ponto ou vírgula)! Detalhes: {ve}")
                 except Exception as e:
                     st.error(f"❌ Erro inesperado: {e}")
-
 # ============================================================================
 # ABA 2 - CLASSIFICAÇÃO (COM MÚLTIPLAS BASES DE FERTILIDADE)
 # ============================================================================
